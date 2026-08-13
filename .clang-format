@@ -1,0 +1,34 @@
+# .clang-format
+
+BasedOnStyle: Microsoft
+ColumnLimit: 112
+IndentWidth: 4
+UseTab: Never
+AccessModifierOffset: -4
+AlignTrailingComments: true
+AllowShortCaseExpressionOnASingleLine: true
+AllowShortLambdasOnASingleLine: Empty
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+BreakTemplateDeclarations: Yes
+Cpp11BracedListStyle: true
+IndentCaseLabels: true
+MaxEmptyLinesToKeep: 1
+NamespaceIndentation: All
+SpaceBeforeParens: ControlStatements
+SpaceAfterCStyleCast: true
+SpaceAfterTemplateKeyword: false
+SpacesInParentheses: false
+SpacesInAngles: false
+SpaceBeforeSquareBrackets: false
+SortIncludes: true
+DerivePointerAlignment: false
+PointerAlignment: Left
+IncludeBlocks: Regroup
+
+IncludeCategories:
+  - Regex: '^"'
+    Priority: 1
+  - Regex: "^<"
+    Priority: 2
