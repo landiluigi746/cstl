@@ -47,6 +47,19 @@ shared_ptr_t* shared_ptr_clone(const shared_ptr_t* src)
     return clone;
 }
 
+void shared_ptr_swap(shared_ptr_t* a, shared_ptr_t* b)
+{
+    CSTL_ASSERT_DEBUG(a != NULL && a->control_block != NULL && b != NULL && b->control_block != NULL,
+                      "Can't swap non-existent shared pointers");
+
+    if (a->control_block == b->control_block)
+        return;
+
+    control_block_t* tmp = a->control_block;
+    a->control_block = b->control_block;
+    b->control_block = tmp;
+}
+
 void* shared_ptr_get(shared_ptr_t* src)
 {
     CSTL_ASSERT_DEBUG(src != NULL && src->control_block != NULL,
