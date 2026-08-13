@@ -1,5 +1,6 @@
 #include <cstl/assert.h>
 #include <cstl/shared_ptr.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -15,6 +16,12 @@ void* get_random_int(void)
     int* x = malloc(sizeof(int));
     *x = rand() % 43;
     return x;
+}
+
+void custom_deleter(void* data)
+{
+    printf("Custom deleter called!\n");
+    free(data);
 }
 
 int main(void)
@@ -60,6 +67,9 @@ int main(void)
 
     shared_ptr_release(&a);
     shared_ptr_release(&b);
+
+    shared_ptr_t* sptr_custom_deleter = shared_ptr_make_deleter(get_random_int(), &custom_deleter);
+    shared_ptr_release(&sptr_custom_deleter);
 
     return 0;
 }

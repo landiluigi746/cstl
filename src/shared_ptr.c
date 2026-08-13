@@ -9,6 +9,7 @@
 typedef struct control_block
 {
     uint32_t reference_count;
+    deleter_t deleter;
     void* data;
 } control_block_t;
 
@@ -17,7 +18,17 @@ struct shared_ptr
     control_block_t* control_block;
 };
 
+static void default_deleter(void* data)
+{
+    free(data);
+}
+
 shared_ptr_t* shared_ptr_make(void* data)
+{
+    return shared_ptr_make_deleter(data, &default_deleter);
+}
+
+shared_ptr_t* shared_ptr_make_deleter(void* data, deleter_t deleter)
 {
     CSTL_ASSERT_DEBUG(data != NULL, "Data to construct a shared pointer from can't be NULL");
 
@@ -29,6 +40,7 @@ shared_ptr_t* shared_ptr_make(void* data)
                 "Failed to allocate memory for the control block of a shared pointer");
 
     sptr->control_block->data = data;
+    sptr->control_block->deleter = deleter;
     sptr->control_block->reference_count = 1;
 
     return sptr;
@@ -60,11 +72,18 @@ void shared_ptr_swap(shared_ptr_t* a, shared_ptr_t* b)
     b->control_block = tmp;
 }
 
-void* shared_ptr_get(shared_ptr_t* src)
+void* shared_ptr_get(const shared_ptr_t* src)
 {
     CSTL_ASSERT_DEBUG(src != NULL && src->control_block != NULL,
-                      "Can't retrieve pointer data from a non-existent shared pointer");
+                      "Can't retrieve data pointer from a non-existent shared pointer");
     return src->control_block->data;
+}
+
+deleter_t shared_ptr_get_deleter(const shared_ptr_t* src)
+{
+    CSTL_ASSERT_DEBUG(src != NULL && src->control_block != NULL,
+                      "Can't retrieve deleter from a non-existent shared pointer");
+    return src->control_block->deleter;
 }
 
 uint32_t shared_ptr_use_count(const shared_ptr_t* src)
@@ -82,7 +101,9 @@ void shared_ptr_release(shared_ptr_t** ptr)
 
     if (sptr->control_block->reference_count == 1)
     {
-        free(sptr->control_block->data);
+        if (sptr->control_block->deleter)
+            sptr->control_block->deleter(sptr->control_block->data);
+
         free(sptr->control_block);
     }
     else
