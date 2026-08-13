@@ -1,0 +1,32 @@
+file(GLOB_RECURSE CSTL_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.c")
+file(GLOB_RECURSE CSTL_HEADERS CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/include/cstl/*.h")
+
+add_library(${PROJECT_NAME} STATIC ${CSTL_SOURCES} ${CSTL_HEADERS})
+
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/include")
+
+if(MSVC)
+  target_compile_options(${PROJECT_NAME} PUBLIC /W4)
+
+  if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    target_compile_options(${PROJECT_NAME} PRIVATE /O2)
+  elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(${PROJECT_NAME} PRIVATE /Zi)
+  elseif(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+    target_compile_options(${PROJECT_NAME} PRIVATE /O2 /Zi)
+  elseif(CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
+    target_compile_options(${PROJECT_NAME} PRIVATE /Os)
+  endif()
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wpedantic)
+
+  if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    target_compile_options(${PROJECT_NAME} PRIVATE -O2)
+  elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(${PROJECT_NAME} PRIVATE -g)
+  elseif(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+    target_compile_options(${PROJECT_NAME} PRIVATE -O2 -g)
+  elseif(CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
+    target_compile_options(${PROJECT_NAME} PRIVATE -Os)
+  endif()
+endif()
