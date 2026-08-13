@@ -1,0 +1,15 @@
+.vs/
+.vscode/
+.cache/
+.idea/
+
+bin/
+lib/
+out/
+build*
+
+CMakeSettings.json
+
+*.sln
+*.vcxproj
+*.vcxproj.*
