@@ -5,6 +5,10 @@ add_library(${PROJECT_NAME} STATIC ${CSTL_SOURCES} ${CSTL_HEADERS})
 
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/include")
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+  target_compile_definitions(${PROJECT_NAME} PUBLIC CSTL_DEBUG)
+endif()
+
 if(MSVC)
   target_compile_options(${PROJECT_NAME} PUBLIC /W4)
 
