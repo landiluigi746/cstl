@@ -1,6 +1,7 @@
 #ifndef CSTL_H
 #define CSTL_H
 
-void test();
+#include "cstl/assert.h"
+#include "cstl/shared_ptr.h"
 
 #endif
