@@ -21,7 +21,7 @@ if(MSVC)
   elseif(CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
     target_compile_options(${PROJECT_NAME} PRIVATE /Os)
   endif()
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+elseif(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
   target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wpedantic)
 
   if(CMAKE_BUILD_TYPE STREQUAL "Release")

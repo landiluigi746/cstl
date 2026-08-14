@@ -7,7 +7,7 @@ foreach(TEST_SOURCE ${CSTL_TEST_SOURCES})
 
   if(MSVC)
     target_compile_options(${PROJECT_NAME} PUBLIC /W4 /Zi)
-  elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  elseif(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wpedantic -g)
   endif()
 
