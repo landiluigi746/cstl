@@ -18,5 +18,15 @@ int main(void)
     string_destroy(&str1);
     string_destroy(&str2);
 
+    string_t* str3 = string_create_from("hello");
+    str3 = string_append(str3, ", world");
+    CSTL_ASSERT(strcmp(string_get_cstr(str3), "hello, world") == 0,
+                "Stored string was expected to be \"hello, world\"");
+    str3 = string_push_back(str3, '!');
+    CSTL_ASSERT(strcmp(string_get_cstr(str3), "hello, world!") == 0,
+                "Stored string was expected to be \"hello, world!\"");
+
+    string_destroy(&str3);
+
     return 0;
 }

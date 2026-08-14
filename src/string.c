@@ -4,8 +4,11 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#define STRING_CAPACITY_GROWTH_FACTOR 3 / 2
 
 struct string
 {
@@ -13,6 +16,20 @@ struct string
     size_t capacity;
     char data[];
 };
+
+static string_t* string_grow_if_necessary(string_t* str, size_t space_required)
+{
+    if (space_required <= str->capacity - str->length)
+        return str;
+
+    size_t new_capacity = (str->capacity + space_required) * STRING_CAPACITY_GROWTH_FACTOR;
+    str = realloc(str, sizeof(*str) + new_capacity + 1);
+    CSTL_ASSERT(str != NULL, "Failed to allocate memory for a string growth");
+
+    str->capacity = new_capacity;
+
+    return str;
+}
 
 string_t* string_create_empty(void)
 {
@@ -33,6 +50,37 @@ string_t* string_create_from(const char* src)
         memcpy(str->data, src, len);
 
     str->data[len] = '\0';
+
+    return str;
+}
+
+string_t* string_append(string_t* str, const char* suffix)
+{
+    CSTL_ASSERT_DEBUG(str != NULL, "Can't append data to a non-existent string");
+
+    if (suffix == NULL || *suffix == '\0')
+        return str;
+
+    size_t suffix_len = strlen(suffix);
+    str = string_grow_if_necessary(str, suffix_len);
+
+    memcpy(str->data + str->length, suffix, suffix_len);
+    str->length += suffix_len;
+    str->data[str->length] = '\0';
+
+    return str;
+}
+
+string_t* string_push_back(string_t* str, char c)
+{
+    CSTL_ASSERT_DEBUG(str != NULL, "Can't append data to a non-existent string");
+
+    if (c == '\0')
+        return str;
+
+    str = string_grow_if_necessary(str, 1);
+    str->data[str->length++] = c;
+    str->data[str->length] = '\0';
 
     return str;
 }
