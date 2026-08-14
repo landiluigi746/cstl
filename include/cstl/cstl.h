@@ -3,5 +3,6 @@
 
 #include "cstl/assert.h"
 #include "cstl/shared_ptr.h"
+#include "cstl/string.h"
 
 #endif
