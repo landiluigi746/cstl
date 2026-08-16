@@ -25,6 +25,13 @@ int main(void)
     str3 = string_push_back(str3, '!');
     CSTL_ASSERT(strcmp(string_get_cstr(str3), "hello, world!") == 0,
                 "Stored string was expected to be \"hello, world!\"");
+    str3 = string_reserve(str3, 32);
+    CSTL_ASSERT(string_get_capacity(str3) == 32, "Expected string capacity to be 32");
+    CSTL_ASSERT(strcmp(string_get_cstr(str3), "hello, world!") == 0,
+                "Stored string was expected to be \"hello, world!\"");
+    string_clear(str3);
+    CSTL_ASSERT(strcmp(string_get_cstr(str3), "") == 0, "Stored string was expected to be \"\"");
+    CSTL_ASSERT(string_get_length(str3) == 0, "Expected string length to be 0");
 
     string_destroy(&str3);
 

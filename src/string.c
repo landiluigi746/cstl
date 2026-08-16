@@ -54,6 +54,13 @@ string_t* string_create_from(const char* src)
     return str;
 }
 
+void string_clear(string_t* str)
+{
+    CSTL_ASSERT_DEBUG(str != NULL, "Can't clear a non-existent string");
+    str->length = 0;
+    str->data[0] = '\0';
+}
+
 string_t* string_append(string_t* str, const char* suffix)
 {
     CSTL_ASSERT_DEBUG(str != NULL, "Can't append data to a non-existent string");
@@ -85,6 +92,21 @@ string_t* string_push_back(string_t* str, char c)
     return str;
 }
 
+string_t* string_reserve(string_t* str, size_t new_capacity)
+{
+    CSTL_ASSERT_DEBUG(str != NULL, "Can't reserve space for a non-existent string");
+
+    if (new_capacity <= str->capacity)
+        return str;
+
+    str = realloc(str, sizeof(*str) + new_capacity + 1);
+    CSTL_ASSERT(str != NULL, "Failed to allocate memory for a string growth");
+
+    str->capacity = new_capacity;
+
+    return str;
+}
+
 const char* string_get_cstr(const string_t* str)
 {
     CSTL_ASSERT_DEBUG(str != NULL, "Can't get data pointer of a non-existent string");
@@ -95,6 +117,12 @@ size_t string_get_length(const string_t* str)
 {
     CSTL_ASSERT_DEBUG(str != NULL, "Can't get length of a non-existent string");
     return str->length;
+}
+
+size_t string_get_capacity(const string_t* str)
+{
+    CSTL_ASSERT_DEBUG(str != NULL, "Can't get capacity of a non-existent string");
+    return str->capacity;
 }
 
 void string_destroy(string_t** str)
