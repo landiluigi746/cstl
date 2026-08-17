@@ -15,5 +15,14 @@ int main(void)
     CSTL_ASSERT(array_a[0] == 5 && array_a[4] == 9 && array_b[0] == 0 && array_b[4] == 4,
                 "Expected values in arrays to be swapped");
 
+    arena_t* arena = arena_create(64);
+    int* x = arena_alloc(arena, sizeof(int));
+    double* y = arena_alloc(arena, sizeof(double));
+
+    *x = 23;
+    *y = 45.6;
+
+    arena_destroy(&arena);
+
     return 0;
 }
