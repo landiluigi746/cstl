@@ -1,0 +1,90 @@
+#include "cstl/vector.h"
+
+#include "cstl/assert.h"
+
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct vector
+{
+    size_t element_size;
+    size_t size;
+    size_t capacity;
+    uint8_t data[];
+};
+
+#define VECTOR_CAPACITY_GROWTH_FACTOR 3 / 2
+#define VECTOR_AT(v, i) ((v)->data + (i) * (v)->element_size)
+
+static vector_t* vector_grow_if_necessary(vector_t* vector)
+{
+    if (vector->size < vector->capacity)
+        return vector;
+
+    size_t new_capacity = (vector->capacity == 0) ? 4 : vector->capacity * VECTOR_CAPACITY_GROWTH_FACTOR;
+    vector = realloc(vector, sizeof(*vector) + new_capacity * vector->element_size);
+    CSTL_ASSERT(vector != NULL, "Failed to allocate memory for a vector growth");
+
+    vector->capacity = new_capacity;
+
+    return vector;
+}
+
+vector_t* vector_create(size_t element_size, size_t capacity)
+{
+    CSTL_ASSERT_DEBUG(element_size != 0, "Can't create a vector of elements of 0 bytes");
+
+    vector_t* vector = malloc(sizeof(*vector) + capacity * element_size);
+    CSTL_ASSERT(vector != NULL, "Failed to allocate memory for a new vector");
+
+    vector->element_size = element_size;
+    vector->size = 0;
+    vector->capacity = capacity;
+
+    return vector;
+}
+
+vector_t* vector_create_empty(size_t element_size)
+{
+    return vector_create(element_size, 0);
+}
+
+vector_t* vector_push_back(vector_t* vector, const void* data)
+{
+    CSTL_ASSERT_DEBUG(vector != NULL, "Can't insert data into a non-existent vector");
+
+    vector = vector_grow_if_necessary(vector);
+
+    if (data != NULL)
+        memcpy(VECTOR_AT(vector, vector->size), data, vector->element_size);
+
+    ++vector->size;
+    return vector;
+}
+
+void* vector_at(vector_t* vector, size_t index)
+{
+    CSTL_ASSERT_DEBUG(vector != NULL, "Can't get data from a non-existent vector");
+    CSTL_ASSERT_DEBUG(index < vector->size, "Index is out of vector bounds");
+    return VECTOR_AT(vector, index);
+}
+
+size_t vector_get_size(const vector_t* vector)
+{
+    CSTL_ASSERT_DEBUG(vector != NULL, "Can't get size of a non-existent vector");
+    return vector->size;
+}
+
+size_t vector_get_capacity(const vector_t* vector)
+{
+    CSTL_ASSERT_DEBUG(vector != NULL, "Can't get capacity of a non-existent vector");
+    return vector->capacity;
+}
+
+void vector_destroy(vector_t** vector)
+{
+    CSTL_ASSERT_DEBUG(vector != NULL && *vector != NULL, "Can't destroy a non-existent vector");
+    free(*vector);
+    *vector = NULL;
+}
