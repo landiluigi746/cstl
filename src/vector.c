@@ -63,11 +63,38 @@ vector_t* vector_push_back(vector_t* vector, const void* data)
     return vector;
 }
 
+vector_t* vector_reserve(vector_t* vector, size_t new_capacity)
+{
+    CSTL_ASSERT_DEBUG(vector != NULL, "Can't reserve space for a non-existent vector");
+
+    if (new_capacity <= vector->capacity)
+        return vector;
+
+    vector = realloc(vector, sizeof(*vector) + new_capacity + 1);
+    CSTL_ASSERT(vector != NULL, "Failed to allocate memory for a vector growth");
+
+    vector->capacity = new_capacity;
+
+    return vector;
+}
+
 void* vector_at(vector_t* vector, size_t index)
 {
     CSTL_ASSERT_DEBUG(vector != NULL, "Can't get data from a non-existent vector");
     CSTL_ASSERT_DEBUG(index < vector->size, "Index is out of vector bounds");
     return VECTOR_AT(vector, index);
+}
+
+void* vector_begin(vector_t* vector)
+{
+    CSTL_ASSERT_DEBUG(vector != NULL, "Can't get pointer to the beginning of a non-existent vector");
+    return VECTOR_AT(vector, 0);
+}
+
+void* vector_end(vector_t* vector)
+{
+    CSTL_ASSERT_DEBUG(vector != NULL, "Can't get pointer to the end of a non-existent vector");
+    return VECTOR_AT(vector, vector->size - 1);
 }
 
 size_t vector_get_size(const vector_t* vector)

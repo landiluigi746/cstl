@@ -20,6 +20,9 @@ int main(void)
     for (i = 0; i < 10; ++i)
         CSTL_ASSERT(*(int*) vector_at(vec1, (size_t) i) == i, "Expected values stored in vector to be [0, 9]");
 
+    vec1 = vector_reserve(vec1, 32);
+    CSTL_ASSERT(vector_get_capacity(vec1) == 32, "Expected vector capacity to be 32");
+
     vector_destroy(&vec1);
 
     vector_t* vec2 = vector_of_empty(string_t*);
@@ -44,6 +47,13 @@ int main(void)
                     "Expected strings stored in vector to match the ones declared in the strings array");
         string_destroy(&str);
     }
+
+    string_t* first_str = *(string_t**) vector_begin(vec2);
+    string_t* last_str = *(string_t**) vector_end(vec2);
+    CSTL_ASSERT(strcmp(string_get_cstr(first_str), strings[0]) == 0,
+                "Expected strings stored in vector to match the ones declared in the strings array");
+    CSTL_ASSERT(strcmp(string_get_cstr(last_str), strings[len - 1]) == 0,
+                "Expected strings stored in vector to match the ones declared in the strings array");
 
     vector_destroy(&vec2);
 
