@@ -8,6 +8,7 @@
 
 struct vector
 {
+    destructor_t element_destructor;
     size_t element_size;
     size_t size;
     size_t capacity;
@@ -31,23 +32,19 @@ static vector_t* vector_grow_if_necessary(vector_t* vector)
     return vector;
 }
 
-vector_t* vector_create(size_t element_size, size_t capacity)
+vector_t* vector_create(size_t element_size, size_t capacity, destructor_t element_destructor)
 {
     CSTL_ASSERT_DEBUG(element_size != 0, "Can't create a vector of elements of 0 bytes");
 
     vector_t* vector = malloc(sizeof(*vector) + capacity * element_size);
     CSTL_ASSERT(vector != NULL, "Failed to allocate memory for a new vector");
 
+    vector->element_destructor = element_destructor;
     vector->element_size = element_size;
     vector->size = 0;
     vector->capacity = capacity;
 
     return vector;
-}
-
-vector_t* vector_create_empty(size_t element_size)
-{
-    return vector_create(element_size, 0);
 }
 
 vector_t* vector_push_back(vector_t* vector, const void* data)
@@ -61,6 +58,19 @@ vector_t* vector_push_back(vector_t* vector, const void* data)
 
     ++vector->size;
     return vector;
+}
+
+void vector_pop_back(vector_t* vector)
+{
+    CSTL_ASSERT_DEBUG(vector != NULL, "Can't erase data from a non-existent vector");
+
+    if (vector->size == 0)
+        return;
+
+    if (vector->element_destructor != NULL)
+        vector->element_destructor(VECTOR_AT(vector, vector->size - 1));
+
+    --vector->size;
 }
 
 vector_t* vector_reserve(vector_t* vector, size_t new_capacity)
@@ -112,6 +122,14 @@ size_t vector_get_capacity(const vector_t* vector)
 void vector_destroy(vector_t** vector)
 {
     CSTL_ASSERT_DEBUG(vector != NULL && *vector != NULL, "Can't destroy a non-existent vector");
+
+    size_t i;
+    if ((*vector)->element_destructor != NULL)
+    {
+        for (i = 0; i < (*vector)->size; ++i)
+            (*vector)->element_destructor(VECTOR_AT(*vector, i));
+    }
+
     free(*vector);
     *vector = NULL;
 }

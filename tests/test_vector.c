@@ -3,6 +3,12 @@
 #include <cstl/vector.h>
 #include <string.h>
 
+void string_destructor(void* data)
+{
+    string_t* str = *(string_t**) data;
+    string_destroy(&str);
+}
+
 int main(void)
 {
     vector_t* vec1 = vector_of(int, 10);
@@ -23,9 +29,13 @@ int main(void)
     vec1 = vector_reserve(vec1, 32);
     CSTL_ASSERT(vector_get_capacity(vec1) == 32, "Expected vector capacity to be 32");
 
+    vector_pop_back(vec1);
+    CSTL_ASSERT(*(int*) vector_at(vec1, vector_get_size(vec1) - 1) == 8,
+                "Expected values stored in vector to be [0, 8]");
+
     vector_destroy(&vec1);
 
-    vector_t* vec2 = vector_of_empty(string_t*);
+    vector_t* vec2 = vector_of_destr(string_t*, 0, &string_destructor);
     const char* strings[] = {
         "hello world!", "simple string", "btc", "roman empire", "call of duty",
     };
@@ -45,7 +55,6 @@ int main(void)
         string_t* str = *(string_t**) vector_at(vec2, i);
         CSTL_ASSERT(strcmp(string_get_cstr(str), strings[i]) == 0,
                     "Expected strings stored in vector to match the ones declared in the strings array");
-        string_destroy(&str);
     }
 
     string_t* first_str = *(string_t**) vector_begin(vec2);
