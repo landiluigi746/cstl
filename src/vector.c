@@ -47,6 +47,12 @@ vector_t* vector_create(size_t element_size, size_t capacity, destructor_t eleme
     return vector;
 }
 
+void vector_clear(vector_t* vector)
+{
+    CSTL_ASSERT_DEBUG(vector != NULL, "Can't clear a non-existent vector");
+    vector->size = 0;
+}
+
 vector_t* vector_push_back(vector_t* vector, const void* data)
 {
     CSTL_ASSERT_DEBUG(vector != NULL, "Can't insert data into a non-existent vector");

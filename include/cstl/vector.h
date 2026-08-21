@@ -7,6 +7,7 @@ typedef void (*destructor_t)(void*);
 typedef struct vector vector_t;
 
 vector_t* vector_create(size_t element_size, size_t capacity, destructor_t element_destructor);
+void vector_clear(vector_t* vector);
 vector_t* vector_push_back(vector_t* vector, const void* data);
 void vector_pop_back(vector_t* vector);
 vector_t* vector_reserve(vector_t* vector, size_t new_capacity);

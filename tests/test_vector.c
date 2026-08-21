@@ -33,6 +33,9 @@ int main(void)
     CSTL_ASSERT(*(int*) vector_at(vec1, vector_get_size(vec1) - 1) == 8,
                 "Expected values stored in vector to be [0, 8]");
 
+    vector_clear(vec1);
+    CSTL_ASSERT(vector_get_size(vec1) == 0, "Expected vector size to be 0");
+
     vector_destroy(&vec1);
 
     vector_t* vec2 = vector_of_destr(string_t*, 0, &string_destructor);
