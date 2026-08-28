@@ -5,8 +5,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define MEMSWAP_BLOCK_SIZE sizeof(size_t)
-
 void swap_memory(void* restrict a, void* restrict b, size_t bytes)
 {
     CSTL_ASSERT_DEBUG(a != NULL && b != NULL && bytes != 0,
