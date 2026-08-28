@@ -104,8 +104,28 @@ size_t vector_get_capacity(const vector_t* vector);
  */
 void vector_destroy(vector_t** vector);
 
+/**
+ * @brief Macro for creating a vector of a given type and capacity without a destructor.
+ *
+ * @param T The type of the elements in the vector.
+ * @param capacity The capacity of the vector.
+ */
 #define vector_of(T, capacity) vector_create(sizeof(T), (capacity), NULL)
+
+/**
+ * @brief Macro for creating a vector of a given type and capacity with a destructor.
+ *
+ * @param T The type of the elements in the vector.
+ * @param capacity The capacity of the vector.
+ * @param destr The destructor function for the elements.
+ */
 #define vector_of_destr(T, capacity, destr) vector_create(sizeof(T), (capacity), (destr))
+
+/**
+ * @brief Macro for creating an empty vector of a given type with no destructor.
+ *
+ * @param T The type of the elements in the vector.
+ */
 #define vector_of_empty(T) vector_create(sizeof(T), 0, NULL)
 
 #endif
