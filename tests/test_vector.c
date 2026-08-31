@@ -29,6 +29,10 @@ int main(void)
     vec1 = vector_reserve(vec1, 32);
     CSTL_ASSERT(vector_get_capacity(vec1) == 32, "Expected vector capacity to be 32");
 
+    vec1 = vector_shrink_to_fit(vec1);
+    CSTL_ASSERT(vector_get_size(vec1) == 10, "Expected vector size to be 10");
+    CSTL_ASSERT(vector_get_capacity(vec1) == 10, "Expected vector capacity to be 10");
+
     vector_pop_back(vec1);
     CSTL_ASSERT(*(int*) vector_at(vec1, vector_get_size(vec1) - 1) == 8,
                 "Expected values stored in vector to be [0, 8]");

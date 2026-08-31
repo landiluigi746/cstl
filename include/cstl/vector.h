@@ -57,6 +57,14 @@ void vector_pop_back(vector_t* vector);
 vector_t* vector_reserve(vector_t* vector, size_t new_capacity);
 
 /**
+ * @brief Reduces the vector capacity to match the current number of elements
+ *
+ * @param vector The vector to shrink.
+ * @return A pointer to the vector
+ */
+vector_t* vector_shrink_to_fit(vector_t* vector);
+
+/**
  * @brief Returns a pointer to the element at the given index.
  *
  * @param vector The vector to get the element from.

@@ -106,6 +106,21 @@ string_t* string_reserve(string_t* str, size_t new_capacity)
     return str;
 }
 
+string_t* string_shrink_to_fit(string_t* str)
+{
+    CSTL_ASSERT_DEBUG(str != NULL, "Can't shrink a non-existent string");
+
+    if (str->length == str->capacity)
+        return str;
+
+    str = realloc(str, sizeof(*str) + str->length + 1);
+    CSTL_ASSERT(str != NULL, "Failed to allocate memory for a string shrink");
+
+    str->capacity = str->length;
+
+    return str;
+}
+
 const char* string_get_cstr(const string_t* str)
 {
     CSTL_ASSERT_DEBUG(str != NULL, "Can't get data pointer of a non-existent string");

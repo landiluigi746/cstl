@@ -59,6 +59,14 @@ string_t* string_push_back(string_t* str, char c);
 string_t* string_reserve(string_t* str, size_t new_capacity);
 
 /**
+ * @brief Shrinks the string capacity to match the current number of characters.
+ *
+ * @param str The string to shrink.
+ * @return A pointer to the modified string.
+ */
+string_t* string_shrink_to_fit(string_t* str);
+
+/**
  * @brief Returns a pointer to the null-terminated C string representation of the given string.
  *
  * @param str The string to get the C string from.

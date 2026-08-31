@@ -86,10 +86,25 @@ vector_t* vector_reserve(vector_t* vector, size_t new_capacity)
     if (new_capacity <= vector->capacity)
         return vector;
 
-    vector = realloc(vector, sizeof(*vector) + new_capacity + 1);
+    vector = realloc(vector, sizeof(*vector) + new_capacity * vector->element_size);
     CSTL_ASSERT(vector != NULL, "Failed to allocate memory for a vector growth");
 
     vector->capacity = new_capacity;
+
+    return vector;
+}
+
+vector_t* vector_shrink_to_fit(vector_t* vector)
+{
+    CSTL_ASSERT_DEBUG(vector != NULL, "Can't shrink a non-existent vector");
+
+    if (vector->size == vector->capacity)
+        return vector;
+
+    vector = realloc(vector, sizeof(*vector) + vector->size * vector->element_size);
+    CSTL_ASSERT(vector != NULL, "Failed to allocate memory for a vector shrink");
+
+    vector->capacity = vector->size;
 
     return vector;
 }
