@@ -50,11 +50,7 @@ static void* string_it_get(iterator_t it)
 
 static int string_it_cmp(const iterator_t a, const iterator_t b)
 {
-    if (a.pointer < b.pointer)
-        return -1;
-    if (a.pointer > b.pointer)
-        return 1;
-    return 0;
+    return (a.pointer < b.pointer) ? -1 : (a.pointer > b.pointer) ? 1 : 0;
 }
 
 static const iterator_funcs_t string_it_funcs = {
