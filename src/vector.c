@@ -1,6 +1,7 @@
 #include "cstl/vector.h"
 
 #include "cstl/assert.h"
+#include "cstl/iterator.h"
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -31,6 +32,37 @@ static vector_t* vector_grow_if_necessary(vector_t* vector)
 
     return vector;
 }
+
+static iterator_t vector_it_next(iterator_t it)
+{
+    vector_t* vec = it.context;
+    it.pointer = (uint8_t*) it.pointer + vec->element_size;
+    return it;
+}
+
+static iterator_t vector_it_prev(iterator_t it)
+{
+    vector_t* vec = it.context;
+    it.pointer = (uint8_t*) it.pointer - vec->element_size;
+    return it;
+}
+
+static void* vector_it_get(iterator_t it)
+{
+    return it.pointer;
+}
+
+static int vector_it_cmp(iterator_t a, iterator_t b)
+{
+    return (a.pointer < b.pointer) ? -1 : (a.pointer > b.pointer) ? 1 : 0;
+}
+
+static const iterator_funcs_t vector_it_funcs = {
+    .next = &vector_it_next,
+    .prev = &vector_it_prev,
+    .get = &vector_it_get,
+    .cmp = &vector_it_cmp,
+};
 
 vector_t* vector_create(size_t element_size, size_t capacity, destructor_t element_destructor)
 {
@@ -138,6 +170,26 @@ size_t vector_get_capacity(const vector_t* vector)
 {
     CSTL_ASSERT_DEBUG(vector != NULL, "Can't get capacity of a non-existent vector");
     return vector->capacity;
+}
+
+iterator_t vector_it_begin(const vector_t* vector)
+{
+    CSTL_ASSERT_DEBUG(vector != NULL, "Can't get iterator to the beginning of a non-existent vector");
+    return (iterator_t){
+        .context = (void*) vector,
+        .pointer = (void*) vector->data,
+        .funcs = &vector_it_funcs,
+    };
+}
+
+iterator_t vector_it_end(const vector_t* vector)
+{
+    CSTL_ASSERT_DEBUG(vector != NULL, "Can't get iterator to the beginning of a non-existent vector");
+    return (iterator_t){
+        .context = (void*) vector,
+        .pointer = (void*) VECTOR_AT(vector, vector->size),
+        .funcs = &vector_it_funcs,
+    };
 }
 
 void vector_destroy(vector_t** vector)

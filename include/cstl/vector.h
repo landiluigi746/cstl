@@ -1,6 +1,8 @@
 #ifndef CSTL_VECTOR_H
 #define CSTL_VECTOR_H
 
+#include "cstl/iterator.h"
+
 #include <stddef.h>
 
 /**
@@ -104,6 +106,22 @@ size_t vector_get_size(const vector_t* vector);
  * @return The capacity of the vector.
  */
 size_t vector_get_capacity(const vector_t* vector);
+
+/**
+ * @brief Returns an iterator to the beginning of the vector.
+ *
+ * @param vector The vector to get the iterator from.
+ * @return An iterator to the beginning of the vector.
+ */
+iterator_t vector_it_begin(const vector_t* vector);
+
+/**
+ * @brief Returns an iterator to the end of the vector.
+ *
+ * @param vector The vector to get the iterator from.
+ * @return An iterator to the end of the vector.
+ */
+iterator_t vector_it_end(const vector_t* vector);
 
 /**
  * @brief Destroys the vector.

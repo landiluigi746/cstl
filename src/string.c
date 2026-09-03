@@ -1,6 +1,7 @@
 #include "cstl/string.h"
 
 #include "cstl/assert.h"
+#include "cstl/iterator.h"
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -29,6 +30,39 @@ static string_t* string_grow_if_necessary(string_t* str, size_t space_required)
 
     return str;
 }
+
+static iterator_t string_it_next(iterator_t it)
+{
+    it.pointer = (char*) it.pointer + 1;
+    return it;
+}
+
+static iterator_t string_it_prev(iterator_t it)
+{
+    it.pointer = (char*) it.pointer - 1;
+    return it;
+}
+
+static void* string_it_get(iterator_t it)
+{
+    return it.pointer;
+}
+
+static int string_it_cmp(const iterator_t a, const iterator_t b)
+{
+    if (a.pointer < b.pointer)
+        return -1;
+    if (a.pointer > b.pointer)
+        return 1;
+    return 0;
+}
+
+static const iterator_funcs_t string_it_funcs = {
+    .next = &string_it_next,
+    .prev = &string_it_prev,
+    .get = &string_it_get,
+    .cmp = &string_it_cmp,
+};
 
 string_t* string_create_empty(void)
 {
@@ -137,6 +171,26 @@ size_t string_get_capacity(const string_t* str)
 {
     CSTL_ASSERT_DEBUG(str != NULL, "Can't get capacity of a non-existent string");
     return str->capacity;
+}
+
+iterator_t string_it_begin(const string_t* str)
+{
+    CSTL_ASSERT_DEBUG(str != NULL, "Can't get iterator to the beginning of a non-existent string");
+    return (iterator_t){
+        .context = (void*) str,
+        .pointer = (void*) str->data,
+        .funcs = &string_it_funcs,
+    };
+}
+
+iterator_t string_it_end(const string_t* str)
+{
+    CSTL_ASSERT_DEBUG(str != NULL, "Can't get iterator to the end of a non-existent string");
+    return (iterator_t){
+        .context = (void*) str,
+        .pointer = (void*) (str->data + str->length),
+        .funcs = &string_it_funcs,
+    };
 }
 
 void string_destroy(string_t** str)

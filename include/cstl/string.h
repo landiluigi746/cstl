@@ -1,6 +1,8 @@
 #ifndef CSTL_STRING_H
 #define CSTL_STRING_H
 
+#include "cstl/iterator.h"
+
 #include <stddef.h>
 
 /**
@@ -89,6 +91,21 @@ size_t string_get_length(const string_t* str);
  * @return The capacity of the string.
  */
 size_t string_get_capacity(const string_t* str);
+
+/**
+ *
+ * @param str The string to get the iterator for.
+ * @return An iterator to the beginning of the string.
+ */
+iterator_t string_it_begin(const string_t* str);
+
+/**
+ * @brief Returns an iterator to the end of the given string.
+ *
+ * @param str The string to get the iterator for.
+ * @return An iterator to the end of the string.
+ */
+iterator_t string_it_end(const string_t* str);
 
 /**
  * @brief Destroys the given string, freeing its memory.
