@@ -34,6 +34,11 @@ typedef int (*cmp_fn)(const iterator_t, const iterator_t);
 typedef ptrdiff_t (*distance_fn)(const iterator_t, const iterator_t);
 
 /**
+ * @brief Alias for a function pointer used to advance an iterator by a given distance.
+ */
+typedef iterator_t (*advance_fn)(iterator_t, ptrdiff_t);
+
+/**
  * @brief Struct holding function pointers for iterator operations.
  */
 typedef struct iterator_funcs
@@ -43,6 +48,7 @@ typedef struct iterator_funcs
     get_fn get;
     cmp_fn cmp;
     distance_fn distance;
+    advance_fn advance;
 } iterator_funcs_t;
 
 /**
@@ -95,5 +101,15 @@ int iterator_cmp(const iterator_t a, const iterator_t b);
  * @return The distance between the two iterators.
  */
 ptrdiff_t iterator_distance(const iterator_t a, const iterator_t b);
+
+/**
+ * @brief Advances an iterator by a given distance.
+ * If the distance is negative, the iterator is moved backwards.
+ *
+ * @param it The iterator to advance.
+ * @param n The number of positions to advance.
+ * @return The advanced iterator.
+ */
+iterator_t iterator_advance(iterator_t it, ptrdiff_t n);
 
 #endif

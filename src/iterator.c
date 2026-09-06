@@ -41,3 +41,10 @@ ptrdiff_t iterator_distance(const iterator_t a, const iterator_t b)
                       "Can't compute distance between iterators with different functions");
     return a.funcs->distance(a, b);
 }
+
+iterator_t iterator_advance(iterator_t it, ptrdiff_t n)
+{
+    CSTL_ASSERT_DEBUG(it.funcs != NULL, "Can't advance an iterator without operations");
+    CSTL_ASSERT_DEBUG(it.funcs->advance != NULL, "Can't advance an iterator without advance operation");
+    return it.funcs->advance(it, n);
+}

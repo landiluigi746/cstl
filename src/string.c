@@ -58,12 +58,19 @@ static ptrdiff_t string_it_distance(const iterator_t a, const iterator_t b)
     return (char*) a.pointer - (char*) b.pointer;
 }
 
+static iterator_t string_it_advance(iterator_t it, ptrdiff_t distance)
+{
+    it.pointer = (char*) it.pointer + distance;
+    return it;
+}
+
 static const iterator_funcs_t string_it_funcs = {
     .next = &string_it_next,
     .prev = &string_it_prev,
     .get = &string_it_get,
     .cmp = &string_it_cmp,
     .distance = &string_it_distance,
+    .advance = &string_it_advance,
 };
 
 string_t* string_create_empty(void)

@@ -63,12 +63,19 @@ static ptrdiff_t vector_it_distance(const iterator_t a, const iterator_t b)
     return (uint8_t*) a.pointer - (uint8_t*) b.pointer;
 }
 
+static iterator_t vector_it_advance(iterator_t it, ptrdiff_t distance)
+{
+    it.pointer = (uint8_t*) it.pointer + distance;
+    return it;
+}
+
 static const iterator_funcs_t vector_it_funcs = {
     .next = &vector_it_next,
     .prev = &vector_it_prev,
     .get = &vector_it_get,
     .cmp = &vector_it_cmp,
     .distance = &vector_it_distance,
+    .advance = &vector_it_advance,
 };
 
 vector_t* vector_create(size_t element_size, size_t capacity, destructor_t element_destructor)

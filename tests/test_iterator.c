@@ -35,6 +35,14 @@ int main(void)
                     "Expected distance between iterator and begin to match character index");
     }
 
+    it = iterator_advance(string_it_begin(str), 1);
+    CSTL_ASSERT(*(char*) iterator_get(it) == src[1],
+                "Expected character pointed to by iterator to be the second character of 'hello world'");
+
+    it = iterator_advance(it, -1);
+    CSTL_ASSERT(*(char*) iterator_get(it) == src[0],
+                "Expected character pointed to by iterator to be the first character of 'hello world'");
+
     string_destroy(&str);
 
     return 0;
