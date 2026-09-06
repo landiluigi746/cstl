@@ -2,6 +2,8 @@
 
 #include "cstl/assert.h"
 
+#include <stddef.h>
+
 iterator_t iterator_next(iterator_t it)
 {
     CSTL_ASSERT_DEBUG(it.funcs != NULL, "Can't move an iterator without operations to next position");
@@ -23,10 +25,19 @@ void* iterator_get(iterator_t it)
     return it.funcs->get(it);
 }
 
-int iterator_cmp(iterator_t a, iterator_t b)
+int iterator_cmp(const iterator_t a, const iterator_t b)
 {
     CSTL_ASSERT_DEBUG(a.funcs != NULL && b.funcs != NULL, "Can't compare iterators without operations");
     CSTL_ASSERT_DEBUG(a.funcs->cmp != NULL && a.funcs->cmp == b.funcs->cmp,
                       "Can't compare iterators with different comparison functions");
     return a.funcs->cmp(a, b);
+}
+
+ptrdiff_t iterator_distance(const iterator_t a, const iterator_t b)
+{
+    CSTL_ASSERT_DEBUG(a.funcs != NULL && b.funcs != NULL,
+                      "Can't compute distance between iterators without operations");
+    CSTL_ASSERT_DEBUG(a.funcs->distance != NULL && a.funcs->distance == b.funcs->distance,
+                      "Can't compute distance between iterators with different functions");
+    return a.funcs->distance(a, b);
 }

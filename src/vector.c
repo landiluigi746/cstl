@@ -3,6 +3,7 @@
 #include "cstl/assert.h"
 #include "cstl/iterator.h"
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -57,11 +58,17 @@ static int vector_it_cmp(iterator_t a, iterator_t b)
     return (a.pointer < b.pointer) ? -1 : (a.pointer > b.pointer) ? 1 : 0;
 }
 
+static ptrdiff_t vector_it_distance(const iterator_t a, const iterator_t b)
+{
+    return (uint8_t*) a.pointer - (uint8_t*) b.pointer;
+}
+
 static const iterator_funcs_t vector_it_funcs = {
     .next = &vector_it_next,
     .prev = &vector_it_prev,
     .get = &vector_it_get,
     .cmp = &vector_it_cmp,
+    .distance = &vector_it_distance,
 };
 
 vector_t* vector_create(size_t element_size, size_t capacity, destructor_t element_destructor)

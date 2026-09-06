@@ -31,6 +31,8 @@ int main(void)
     {
         char c = *(char*) iterator_get(it);
         CSTL_ASSERT(c == src[i], "Expected iterated characters to match original string");
+        CSTL_ASSERT(iterator_distance(it, string_it_begin(str)) == i,
+                    "Expected distance between iterator and begin to match character index");
     }
 
     string_destroy(&str);

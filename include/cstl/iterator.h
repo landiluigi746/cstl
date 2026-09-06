@@ -26,7 +26,12 @@ typedef void* (*get_fn)(iterator_t);
 /**
  * @brief Alias for a function pointer used to compare two iterators.
  */
-typedef int (*cmp_fn)(iterator_t, iterator_t);
+typedef int (*cmp_fn)(const iterator_t, const iterator_t);
+
+/**
+ * @brief Alias for a function pointer used to get the distance between two iterators.
+ */
+typedef ptrdiff_t (*distance_fn)(const iterator_t, const iterator_t);
 
 /**
  * @brief Struct holding function pointers for iterator operations.
@@ -37,6 +42,7 @@ typedef struct iterator_funcs
     prev_fn prev;
     get_fn get;
     cmp_fn cmp;
+    distance_fn distance;
 } iterator_funcs_t;
 
 /**
@@ -79,6 +85,15 @@ void* iterator_get(iterator_t it);
  * @return 0 if the iterators are equal, a negative value if it1 is less than it2, or a positive value if it1 is
  * greater than it2.
  */
-int iterator_cmp(iterator_t a, iterator_t b);
+int iterator_cmp(const iterator_t a, const iterator_t b);
+
+/**
+ * @brief Computes the distance between two iterators.
+ *
+ * @param it1 The first iterator.
+ * @param it2 The second iterator.
+ * @return The distance between the two iterators.
+ */
+ptrdiff_t iterator_distance(const iterator_t a, const iterator_t b);
 
 #endif
