@@ -2,13 +2,9 @@
 #define CSTL_VECTOR_H
 
 #include "cstl/iterator.h"
+#include "cstl/utility.h"
 
 #include <stddef.h>
-
-/**
- * @brief Alias for destructor function type for vector elements.
- */
-typedef void (*destructor_t)(void*);
 
 /**
  * @brief A vector is a dynamic array that can grow and shrink in size.

@@ -1,6 +1,7 @@
 #include "cstl/shared_ptr.h"
 
 #include "cstl/assert.h"
+#include "cstl/utility.h"
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -9,7 +10,7 @@
 typedef struct control_block
 {
     uint32_t reference_count;
-    deleter_t deleter;
+    destructor_t deleter;
     void* data;
 } control_block_t;
 
@@ -28,7 +29,7 @@ shared_ptr_t* shared_ptr_make(void* data)
     return shared_ptr_make_deleter(data, &default_deleter);
 }
 
-shared_ptr_t* shared_ptr_make_deleter(void* data, deleter_t deleter)
+shared_ptr_t* shared_ptr_make_deleter(void* data, destructor_t deleter)
 {
     CSTL_ASSERT_DEBUG(data != NULL, "Data to construct a shared pointer from can't be NULL");
 
@@ -79,7 +80,7 @@ void* shared_ptr_get(const shared_ptr_t* src)
     return src->control_block->data;
 }
 
-deleter_t shared_ptr_get_deleter(const shared_ptr_t* src)
+destructor_t shared_ptr_get_deleter(const shared_ptr_t* src)
 {
     CSTL_ASSERT_DEBUG(src != NULL && src->control_block != NULL,
                       "Can't retrieve deleter from a non-existent shared pointer");

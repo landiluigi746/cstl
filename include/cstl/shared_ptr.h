@@ -1,13 +1,10 @@
 #ifndef CSTL_SHARED_PTR_H
 #define CSTL_SHARED_PTR_H
 
+#include "cstl/utility.h"
+
 #include <stddef.h>
 #include <stdint.h>
-
-/**
- * @brief Alias for the deleter function type of a shared pointer.
- */
-typedef void (*deleter_t)(void*);
 
 /**
  * @brief A shared pointer is a smart pointer that holds a pointer to a value shared between multiple owners.
@@ -31,7 +28,7 @@ shared_ptr_t* shared_ptr_make(void* data);
  * @param deleter The deleter function to use.
  * @return A shared pointer to the value.
  */
-shared_ptr_t* shared_ptr_make_deleter(void* data, deleter_t deleter);
+shared_ptr_t* shared_ptr_make_deleter(void* data, destructor_t deleter);
 
 /**
  * @brief Clones a shared pointer.
@@ -63,7 +60,7 @@ void* shared_ptr_get(const shared_ptr_t* src);
  * @param src The shared pointer to retrieve the deleter function from.
  * @return The deleter function.
  */
-deleter_t shared_ptr_get_deleter(const shared_ptr_t* src);
+destructor_t shared_ptr_get_deleter(const shared_ptr_t* src);
 
 /**
  * @brief Retrieves the number of shared pointers that share ownership with a given shared pointer (including
