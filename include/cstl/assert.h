@@ -12,7 +12,7 @@ void assert_msg(int expr, const char* exprMsg, const char* msg);
  */
 #define CSTL_ASSERT_DEBUG(expr, msg) assert_msg((expr), (#expr), (msg))
 #else
-#define CSTL_ASSERT_DEBUG(expr)
+#define CSTL_ASSERT_DEBUG(expr, msg) ((void) 0)
 #endif
 
 /**
