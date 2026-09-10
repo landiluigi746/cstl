@@ -96,6 +96,14 @@ vector_t* vector_create(size_t element_size, size_t capacity, destructor_t eleme
 void vector_clear(vector_t* vector)
 {
     CSTL_ASSERT_DEBUG(vector != NULL, "Can't clear a non-existent vector");
+
+    size_t i;
+    if (vector->element_destructor != NULL)
+    {
+        for (i = 0; i < vector->size; ++i)
+            vector->element_destructor(VECTOR_AT(vector, i));
+    }
+
     vector->size = 0;
 }
 
@@ -198,7 +206,7 @@ iterator_t vector_it_begin(const vector_t* vector)
 
 iterator_t vector_it_end(const vector_t* vector)
 {
-    CSTL_ASSERT_DEBUG(vector != NULL, "Can't get iterator to the beginning of a non-existent vector");
+    CSTL_ASSERT_DEBUG(vector != NULL, "Can't get iterator to the end of a non-existent vector");
     return (iterator_t){
         .context = (void*) vector,
         .pointer = (void*) VECTOR_AT(vector, vector->size),
@@ -210,12 +218,7 @@ void vector_destroy(vector_t** vector)
 {
     CSTL_ASSERT_DEBUG(vector != NULL && *vector != NULL, "Can't destroy a non-existent vector");
 
-    size_t i;
-    if ((*vector)->element_destructor != NULL)
-    {
-        for (i = 0; i < (*vector)->size; ++i)
-            (*vector)->element_destructor(VECTOR_AT(*vector, i));
-    }
+    vector_clear(*vector);
 
     free(*vector);
     *vector = NULL;
